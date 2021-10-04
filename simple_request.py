@@ -3,15 +3,16 @@
 
 # import the necessary packages
 import requests
+import sys
 
 # initialize the Keras REST API endpoint URL along with the input
-# image path
+# wav path
 KERAS_REST_API_URL = "http://localhost:5000/predict"
-IMAGE_PATH = "dog.jpg"
+IMAGE_PATH = sys.argv[1]
 
-# load the input image and construct the payload for the request
-image = open(IMAGE_PATH, "rb").read()
-payload = {"image": image}
+# load the input wav and construct the payload for the request
+wav = open(IMAGE_PATH, "rb").read()
+payload = {"wav": wav}
 
 # submit the request
 r = requests.post(KERAS_REST_API_URL, files=payload).json()
