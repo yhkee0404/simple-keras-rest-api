@@ -2,9 +2,9 @@
 # Start the server:
 # 	python -m ai.simple-keras-rest-api.run_keras_server
 # Submit a request via cURL:
-# 	curl -X POST -F wav=@../test.wav 'http://localhost:5000/predict'
+# 	curl -X POST -F wav=@ai/test.wav 'http://localhost:5000/score'
 # Submit a request via Python:
-#	python simple_request.py ../test.wav
+#	python -m ai.simple-keras-rest-api.simple_request.py ai/test.wav
 
 # import the necessary packages
 from ..Multimodal.Audio_Inference import score, AudioClassifier, BERTClassifier, MultimodalClassifier
