@@ -1,24 +1,21 @@
 # USAGE
 # Start the server:
-# 	python -m ai.simple-keras-rest-api.run_keras_server ai/koremo/model/model_for_6.h5
+# 	python -m ai.simple-keras-rest-api.run_keras_server
 # Submit a request via cURL:
-# 	curl -X POST -F wav=@ai/data/F_000001.wav 'http://localhost:5000/predict'
+# 	curl -X POST -F wav=@../test.wav 'http://localhost:5000/predict'
 # Submit a request via Python:
-#	python simple_request.py
+#	python simple_request.py ../test.wav
 
 # import the necessary packages
-from ..koremo.koremo import pred_emo
-import librosa
+from ..Multimodal.Audio_Inference import score, AudioClassifier, BERTClassifier, MultimodalClassifier
 import flask
 import io
-from tensorflow.compat.v1.keras.models import load_model
-import sys
+import os
 
 # initialize our Flask application and the Keras model
 app = flask.Flask(__name__)
-model = None
 
-@app.route("/predict", methods=["POST"])
+@app.route("/score", methods=["POST"])
 def predict():
 	# initialize the data dictionary that will be returned from the
 	# view
@@ -29,18 +26,17 @@ def predict():
 		if flask.request.files.get("wav"):
 			# read the wav in librosa
 			wav = flask.request.files["wav"].read()
-			y, sr = librosa.load(io.BytesIO(wav))
+			data_file = io.BytesIO(wav)
 
 			# preprocess the wav and prepare it for classification
-
 			# classify the input wav and then initialize the list
 			# of predictions to return to the client
-			results = pred_emo(model, [y])
+			result = score(data_file)
 			data["predictions"] = []
 
 			# loop over the results and add them to the list of
 			# returned predictions
-			for (label, prob) in results[0]:
+			for (label, prob) in result:
 				r = {"label": label, "probability": float(prob)}
 				data["predictions"].append(r)
 
@@ -55,6 +51,6 @@ def predict():
 if __name__ == "__main__":
 	print(("* Loading Keras model and Flask starting server..."
 		"please wait until server has fully started"))
-	model_path = sys.argv[1]
-	model = load_model(model_path, compile=False)
+	os.chdir('ai/Multimodal')
+	score(open('../test.wav','rb'))
 	app.run()

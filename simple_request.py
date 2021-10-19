@@ -7,11 +7,11 @@ import sys
 
 # initialize the Keras REST API endpoint URL along with the input
 # wav path
-KERAS_REST_API_URL = "http://localhost:5000/predict"
-IMAGE_PATH = sys.argv[1]
+KERAS_REST_API_URL = "http://localhost:5000/score"
+WAV_PATH = sys.argv[1]
 
 # load the input wav and construct the payload for the request
-wav = open(IMAGE_PATH, "rb").read()
+wav = open(WAV_PATH, "rb").read()
 payload = {"wav": wav}
 
 # submit the request
@@ -23,6 +23,7 @@ if r["success"]:
 	for (i, result) in enumerate(r["predictions"]):
 		print("{}. {}: {:.4f}".format(i + 1, result["label"],
 			result["probability"]))
+	print(r)
 
 # otherwise, the request failed
 else:
