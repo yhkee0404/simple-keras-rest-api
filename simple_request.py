@@ -7,7 +7,7 @@ import sys
 
 # initialize the Keras REST API endpoint URL along with the input
 # wav path
-KERAS_REST_API_URL = "http://localhost:5000/score"
+KERAS_REST_API_URL = sys.argv[2]
 WAV_PATH = sys.argv[1]
 
 # load the input wav and construct the payload for the request
